@@ -99,3 +99,40 @@ VALUES('Terisa',2200000.00,'F','Plot 23,Pune','1234567890','Marketing',10000,100
 UPDATE Employee_Payroll_Table SET Startdate='2020-03-30' WHERE EmpID=15 OR EmpID=16;
 
 SELECT * FROM Employee_Payroll_Table;
+
+--ER Diagram UC11
+--1.Employee Details Table
+CREATE TABLE EmployeeDetail(
+EmpId INT PRIMARY KEY IDENTITY(1,1),
+EmpName VARCHAR(150) NOT NULL,
+Address VARCHAR(100)NOT NULL,
+Gender VARCHAR(10) NOT NULL,
+Mobile VARCHAR(10) DEFAULT('1234567890')
+);
+
+INSERT INTO EmployeeDetail(EmpName, Address,Gender,Mobile) VALUES('Swati','Karad','Female','7875623078'),('Payal','Pune','Female','8986922703');
+INSERT INTO EmployeeDetail(EmpName, Address,Gender,Mobile) VALUES('Mahek','Kolhapur','Female','9855623078'),('Malhar','Pune','Male','8986932703'),('Shubham','Panvel','Male','7549856306');
+SELECT * FROM EmployeeDetail;
+
+--Department Table
+CREATE TABLE DepertamentDetails(
+DeptId INT PRIMARY KEY IDENTITY(1001,1),
+DeptName VARCHAR(150) NOT NULL,
+EmpId INT FOREIGN KEY REFERENCES EmployeeDetail(EmpId)
+);
+
+INSERT INTO DepertamentDetails VALUES ('HR',1),('Manager',2),('Sales',3),('Marketing',4),('IT',5);
+SELECT * FROM DepertamentDetails;
+
+--Salary Table
+CREATE TABLE SalaryDetails(
+BasicPay BIGINT DEFAULT(000),
+Deduction BIGINT DEFAULT(000),
+Tax BIGINT DEFAULT(000),
+EmpId INT FOREIGN KEY REFERENCES EmployeeDetail(EmpId),
+NetPay Bigint 
+);
+
+INSERT INTO SalaryDetails(BasicPay,Deduction,Tax,EmpId) VALUES(1000000,2000,3000,1),(2000000,5000,2500,2),(3000000,10000,8000,3),(4000000,20000,15000,4),(5000000,30000,25000,5);
+UPDATE SalaryDetails SET NetPay=(BasicPay-Tax-Deduction);
+SELECT * FROM SalaryDetails;

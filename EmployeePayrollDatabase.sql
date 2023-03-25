@@ -136,3 +136,17 @@ NetPay Bigint
 INSERT INTO SalaryDetails(BasicPay,Deduction,Tax,EmpId) VALUES(1000000,2000,3000,1),(2000000,5000,2500,2),(3000000,10000,8000,3),(4000000,20000,15000,4),(5000000,30000,25000,5);
 UPDATE SalaryDetails SET NetPay=(BasicPay-Tax-Deduction);
 SELECT * FROM SalaryDetails;
+
+--Main Company 
+CREATE TABLE CompanyTable(
+CompId INT PRIMARY KEY IDENTITY(1,1),
+EmpId INT FOREIGN KEY REFERENCES EmployeeDetail(EmpId),
+DeptId INT FOREIGN KEY REFERENCES DepertamentDetails(DeptId),
+Start DATE NOT NULL,
+);
+INSERT INTO CompanyTable(EmpId,DeptId,Start) VALUES(1,1001,'2020-03-01'),(2,1002,'2011-01-01'),(3,1003,'2015-01-01'),(4,1004,'2011-01-01'),(5,1005,'2018-01-01');
+SELECT *FROM CompanyTable;
+
+SELECT * FROM CompanyTable AS A FULL OUTER JOIN EmployeeDetail AS B ON A.EmpId=B.EmpId; 
+SELECT * FROM EmployeeDetail AS C FULL OUTER JOIN DepertamentDetails AS D ON C.EmpId=D.EmpId; 
+SELECT * FROM EmployeeDetail AS C FULL OUTER JOIN SalaryDetails AS D ON C.EmpId=D.EmpId; 

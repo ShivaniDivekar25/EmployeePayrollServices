@@ -115,14 +115,14 @@ INSERT INTO EmployeeDetail(EmpName, Address,Gender,Mobile) VALUES('Mahek','Kolha
 SELECT * FROM EmployeeDetail;
 
 --Department Table
-CREATE TABLE DepertamentDetails(
+CREATE TABLE DepartmentDetails(
 DeptId INT PRIMARY KEY IDENTITY(1001,1),
 DeptName VARCHAR(150) NOT NULL,
 EmpId INT FOREIGN KEY REFERENCES EmployeeDetail(EmpId)
 );
 
-INSERT INTO DepertamentDetails VALUES ('HR',1),('Manager',2),('Sales',3),('Marketing',4),('IT',5);
-SELECT * FROM DepertamentDetails;
+INSERT INTO DepartmentDetails VALUES ('HR',1),('Manager',2),('Sales',3),('Marketing',4),('IT',5);
+SELECT * FROM DepartmentDetails;
 
 --Salary Table
 CREATE TABLE SalaryDetails(
@@ -141,12 +141,42 @@ SELECT * FROM SalaryDetails;
 CREATE TABLE CompanyTable(
 CompId INT PRIMARY KEY IDENTITY(1,1),
 EmpId INT FOREIGN KEY REFERENCES EmployeeDetail(EmpId),
-DeptId INT FOREIGN KEY REFERENCES DepertamentDetails(DeptId),
+DeptId INT FOREIGN KEY REFERENCES DepartmentDetails(DeptId),
 Start DATE NOT NULL,
 );
 INSERT INTO CompanyTable(EmpId,DeptId,Start) VALUES(1,1001,'2020-03-01'),(2,1002,'2011-01-01'),(3,1003,'2015-01-01'),(4,1004,'2011-01-01'),(5,1005,'2018-01-01');
 SELECT *FROM CompanyTable;
 
 SELECT * FROM CompanyTable AS A FULL OUTER JOIN EmployeeDetail AS B ON A.EmpId=B.EmpId; 
-SELECT * FROM EmployeeDetail AS C FULL OUTER JOIN DepertamentDetails AS D ON C.EmpId=D.EmpId; 
+SELECT * FROM EmployeeDetail AS C FULL OUTER JOIN DepartmentDetails AS D ON C.EmpId=D.EmpId; 
 SELECT * FROM EmployeeDetail AS C FULL OUTER JOIN SalaryDetails AS D ON C.EmpId=D.EmpId; 
+
+--UC12
+--All data retrieve
+SELECT * FROM CompanyTable INNER JOIN EmployeeDetail ON CompanyTable.EmpId = EmployeeDetail.EmpId;
+SELECT * FROM CompanyTable INNER JOIN DepartmentDetails ON EmployeeDetail.EmpId = DepartmentDetails.EmpId;
+SELECT * FROM CompanyTable INNER JOIN SalaryDetails ON EmployeeDetail.EmpId = SalaryDetails.EmpId;
+
+--UC12 - UC6
+SELECT * FROM CompanyTable
+WHERE Start BETWEEN CAST('2018-01-01'AS DATE) AND GETDATE();
+--UC12 -UC7
+--Avg
+SELECT AVG(NetPay) FROM SalaryDetails 
+INNER JOIN EmployeeDetail ON  SalaryDetails.EmpId = EmployeeDetail.EmpId  WHERE Gender = 'Male' GROUP BY Gender;
+
+--Sum
+SELECT Gender, SUM(NetPay) AS AvgSalary FROM SalaryDetails 
+INNER JOIN EmployeeDetail ON  SalaryDetails.EmpId = EmployeeDetail.EmpId GROUP BY Gender;
+
+--Min
+SELECT Gender, MIN(NetPay) AS MinSalary FROM SalaryDetails 
+INNER JOIN EmployeeDetail ON  SalaryDetails.EmpId = EmployeeDetail.EmpId GROUP BY Gender;
+
+--Max
+SELECT Gender, MAX(NetPay) AS MaxSalary FROM SalaryDetails 
+INNER JOIN EmployeeDetail ON  SalaryDetails.EmpId = EmployeeDetail.EmpId GROUP BY Gender;
+
+--Count
+SELECT Gender, COUNT(NetPay) As TotalPerson FROM SalaryDetails 
+INNER JOIN EmployeeDetail ON  SalaryDetails.EmpId = EmployeeDetail.EmpId GROUP BY Gender;
